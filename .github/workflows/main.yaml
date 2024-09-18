@@ -1,0 +1,61 @@
+name: Flask CI
+
+on:
+  push:
+    branches: [main,master] #Setting this action to run on push to master or main branch
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest #ubuntu is a widely used Linux Distribution that is heavily support making it very sound
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2 #Checks our code for any Stand-out errors
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12 #setting this build version to run on python 3.12
+      
+      - name:  Create Virtual Environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install our Dependencies #upgrade your version of pip, and install all dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      
+      - name: Printing debugging information
+        run: |
+          echo "Python Version: $(python --version)"
+          echo "Working Directory: $(pwd)"
+          echo "Content of Working Directory: $(ls-l)"
+          echo "Contents of site-package: $(ls-l venv/lib/python*/site-packages)"
+          
+  test:
+    needs: build
+
+    runs-on: ubuntu-latest #ubuntu is a widely used Linux Distribution that is heavily support making it very sound
+
+    steps:
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12 #setting this build version to run on python 3.12
+      
+      - name:  Create Virtual Environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install our Dependencies #upgrade your version of pip, and install all dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run test
+        run: python -m unittest discover -s tests -p 'test_*'.py #discovers our test_fils and runs them
