@@ -41,7 +41,9 @@ jobs:
     runs-on: ubuntu-latest #ubuntu is a widely used Linux Distribution that is heavily support making it very sound
 
     steps:
-
+      - name: Checkout Code
+        uses: actions/checkout@v2 #Checks our code for any Stand-out errors
+        
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
